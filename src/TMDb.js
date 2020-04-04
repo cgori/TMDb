@@ -14,6 +14,9 @@ class TMDb {
      * Creates an instance of TMDb.
      *
      * @param {Object} defaultOptions Default request options
+     * @param {number} defaultOptions.api_key Default API key
+     * @param {string} [defaultOptions.language=en] Default API response language
+     * @param {string} [defaultOptions.region=us] Default API response region
      */
     constructor(defaultOptions) {
         this.defaultOptions = {
