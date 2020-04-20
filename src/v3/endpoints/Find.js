@@ -57,7 +57,7 @@ class FindEndpoint extends Util {
     async findByExternalId(options = {}) {
         if (!this.externalId) return Promise.reject(Error(this.error.noExternalId));
 
-        return this.request('GET', this.createPath('findByExternalId'), options);
+        return this.request('GET', this.createPath(this.paths.findByExternalId), options);
     }
 }
 

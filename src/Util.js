@@ -50,7 +50,7 @@ class Util {
             const { data: response } = await axios({
                 method,
                 url: this.baseUrl + this.version + path,
-                params: { ...this.defaultOptions, options },
+                params: { ...this.defaultOptions, ...options },
                 body: content,
                 headers,
             });
