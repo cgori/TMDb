@@ -27,6 +27,8 @@ class ID {
         this.searchFunction = searchFunction.bind(
             new SearchEndpoint(this.version, this.defaultOptions)
         );
+
+        this.defaultId = /t(\d+)/;
     }
 
     /**
@@ -103,6 +105,10 @@ class ID {
         if (method.id) return method.id;
 
         if (method.externalId) {
+            const isDefault = method.externalId.match(this.defaultId);
+
+            if (isDefault) return isDefault[1];
+
             try {
                 return await this.getIdFromExternalSource(method.externalId);
             } catch (error) {
