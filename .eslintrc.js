@@ -20,5 +20,6 @@ module.exports = {
         'consistent-return': 'off',
         'no-underscore-dangle': 'off',
         'no-console': 'off',
+        'max-classes-per-file': 'off',
     },
 };

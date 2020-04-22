@@ -1,8 +1,9 @@
 import FindEndpoint from './endpoints/Find';
-import MovieEndpoint from './endpoints/Movie';
-import TVEndpoint from './endpoints/TV';
-import PersonEndpoint from './endpoints/Person';
 import SearchEndpoint from './endpoints/Search';
+
+import { MovieEndpoint, MovieEndpointSimple } from './endpoints/Movie';
+import { TVEndpoint, TVEndpointSimple } from './endpoints/TV';
+import { PersonEndpoint, PersonEndpointSimple } from './endpoints/Person';
 
 /**
  * Version 3.
@@ -24,41 +25,12 @@ class V3 {
     /**
      * Find endpoint.
      *
-     * @param {string} [externalId] External ID
+     * @param {Object} method Method
+     * @param {string} [mehtod.externalId] External ID
      * @returns {FindEndpoint}
      */
-    find(externalId) {
-        return new FindEndpoint(this.version, this.defaultOptions, externalId);
-    }
-
-    /**
-     * Movie endpoint.
-     *
-     * @param {number} [id] TMDb ID
-     * @returns {MovieEndpoint}
-     */
-    movie(id) {
-        return new MovieEndpoint(this.version, this.defaultOptions, id);
-    }
-
-    /**
-     * TV endpoint.
-     *
-     * @param {number} [id] TMDb ID
-     * @returns {TVEndpoint}
-     */
-    tv(id) {
-        return new TVEndpoint(this.version, this.defaultOptions, id);
-    }
-
-    /**
-     * Person endpoint.
-     *
-     * @param {number} [id] TMDb ID
-     * @returns {PersonEndpoint}
-     */
-    person(id) {
-        return new PersonEndpoint(this.version, this.defaultOptions, id);
+    findEndpoint(method) {
+        return new FindEndpoint(this.version, this.defaultOptions).setExternalId(method.externalId);
     }
 
     /**
@@ -66,8 +38,53 @@ class V3 {
      *
      * @returns {PersonEndpoint}
      */
-    search() {
+    searchEndpoint() {
         return new SearchEndpoint(this.version, this.defaultOptions);
+    }
+
+    /**
+     * Movie endpoint.
+     *
+     * @param {Object} [method] Method
+     * @param {number} [method.id] TMDb ID
+     * @param {string} [mehtod.externalId] External ID
+     * @param {string} [method.query] Query
+     * @returns {(MovieEndpoint | MovieEndpointSimple)}
+     */
+    async movieEndpoint(method) {
+        return method
+            ? new MovieEndpoint(this.version, this.defaultOptions).setId(method)
+            : new MovieEndpointSimple(this.version, this.defaultOptions);
+    }
+
+    /**
+     * TV endpoint.
+     *
+     * @param {Object} [method] Method
+     * @param {number} [method.id] TMDb ID
+     * @param {string} [mehtod.externalId] External ID
+     * @param {string} [method.query] Query
+     * @returns {(TVEndpoint | TVEndpointSimple)}
+     */
+    tvEndpoint(method) {
+        return method
+            ? new TVEndpoint(this.version, this.defaultOptions).setId(method)
+            : new TVEndpointSimple(this.version, this.defaultOptions);
+    }
+
+    /**
+     * Person endpoint.
+     *
+     * @param {Object} [method] Method
+     * @param {number} [method.id] TMDb ID
+     * @param {string} [mehtod.externalId] External ID
+     * @param {string} [method.query] Query
+     * @returns {(PersonEndpoint | PersonEndpointSimple)}
+     */
+    personEndpoint(method) {
+        return method
+            ? new PersonEndpoint(this.version, this.defaultOptions).setId(method)
+            : new PersonEndpointSimple(this.version, this.defaultOptions);
     }
 }
 

@@ -15,12 +15,11 @@ class FindEndpoint extends Util {
      *
      * @param {number} version API version
      * @param {Object} defaultOptions Default request options
-     * @param {number} externalId External ID
      */
-    constructor(version, defaultOptions, externalId) {
+    constructor(version, defaultOptions) {
         super(version, defaultOptions);
 
-        this.externalId = externalId || null;
+        this.externalId = null;
 
         this.paths = paths;
     }
@@ -32,6 +31,8 @@ class FindEndpoint extends Util {
      * @returns {FindEndpoint}
      */
     setExternalId(externalId) {
+        if (this.externalId) return Promise.reject(Error(this.message.idAlreadySet));
+
         this.externalId = externalId;
 
         return this;
@@ -54,10 +55,10 @@ class FindEndpoint extends Util {
      * @param {Object} [options] Request options
      * @returns {Promise<Object>}
      */
-    async findByExternalId(options = {}) {
-        if (!this.externalId) return Promise.reject(Error(this.error.noExternalId));
+    async byExternalId(options = {}) {
+        if (!this.externalId) return Promise.reject(Error(this.message.externalIdRequired));
 
-        return this.request('GET', this.createPath(this.paths.findByExternalId), options);
+        return this.request('GET', this.createPath(this.paths.byExternalId), options);
     }
 }
 

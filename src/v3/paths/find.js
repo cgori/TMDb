@@ -1,5 +1,5 @@
 export default {
     base: '/find',
 
-    findByExternalId: '/{externalId}',
+    byExternalId: '/{externalId}',
 };

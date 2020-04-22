@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+import message from './message';
+
 /**
  * Util.
  *
- * @prop {Object} error Common error messages
+ * @prop {Object} message Common messages
  * @prop {string} baseUrl API base URL
  * @prop {number} version API version
  * @prop {Object} defaultOptions Default request options
@@ -16,10 +18,7 @@ class Util {
      * @param {Object} defaultOptions Default request options
      */
     constructor(version, defaultOptions) {
-        this.error = {
-            noId: 'TMDb ID required.',
-            noExternalId: 'External ID required.',
-        };
+        this.message = message;
 
         this.baseUrl = `https://api.themoviedb.org/`;
         this.version = version;
@@ -38,8 +37,8 @@ class Util {
      * @returns {Promise<Object>}
      */
     async request(method, path, options = {}, content = {}, headers = {}) {
-        if (!method) return Promise.reject(Error('Request method required.'));
-        if (!path) return Promise.reject(Error('Request endpoint path required.'));
+        if (!method) return Promise.reject(Error(this.message.methodRequired));
+        if (!path) return Promise.reject(Error(this.message.pathRequired));
 
         method = method.toUpperCase();
 

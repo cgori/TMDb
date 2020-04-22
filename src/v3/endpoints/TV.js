@@ -1,4 +1,8 @@
 import Util from '../../Util';
+
+import ID from '../ID';
+import SearchEndpoint from './Search';
+
 import paths from '../paths/tv';
 
 /**
@@ -9,32 +13,50 @@ import paths from '../paths/tv';
  * @prop {Object} paths Endpoint paths
  * @extends {Util}
  */
-class TVEndpoint extends Util {
+export class TVEndpoint extends Util {
     /**
      * Creates an instance of TVEndpoint.
      *
      * @param {number} version API version
      * @param {Object} defaultOptions Default request options
-     * @param {number} [id] TMDb ID
      */
-    constructor(version, defaultOptions, id) {
+    constructor(version, defaultOptions) {
         super(version, defaultOptions);
 
-        this.id = id;
+        this.id = null;
 
         this.paths = paths;
+        this.externalSources = { imdb_id: /tt\d+/ };
     }
 
     /**
      * Set the TMDb ID.
      *
-     * @param {number} id TMDb ID
-     * @returns {TVEndpoint}
+     * @param {Object} method Method
+     * @param {number} [method.id] TMDb ID
+     * @param {string} [method.externalId] External ID
+     * @param {string} [method.query] Query
+     * @returns {PersonEndpoint}
      */
-    setId(id) {
-        this.id = id;
+    async setId(method) {
+        if (this.id) return Promise.reject(Error(this.message.idAlreadySet));
 
-        return this;
+        const search = new SearchEndpoint(this.version, this.defaultOptions);
+        const helper = new ID(
+            this.version,
+            this.defaultOptions,
+            this.externalSources,
+            'tv_results',
+            search.getTVShows
+        );
+
+        try {
+            this.id = await helper.getId(method);
+
+            return this;
+        } catch (error) {
+            Promise.reject(error);
+        }
     }
 
     /**
@@ -55,9 +77,249 @@ class TVEndpoint extends Util {
      * @returns {Promise<Object>}
      */
     async getDetails(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
         return this.request('GET', this.createPath(this.paths.details), options);
+    }
+
+    /**
+     * Get all of the alternative titles for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-alternative-titles
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getAlternativeTitles(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.alternativeTitles), options);
+    }
+
+    /**
+     * Get the changes for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-changes
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async changes(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.changes), options);
+    }
+
+    /**
+     * Get the list of content ratings (certifications) that have been added to a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-content-ratings
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getContentRatings(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.contentRatings), options);
+    }
+
+    /**
+     * Get the credits (cast and crew) for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-credits
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getCredits(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.credits), options);
+    }
+
+    /**
+     * Get all of the episode groups that have been created for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-episode-groups
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getEpisodeGroups(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.episodeGroups), options);
+    }
+
+    /**
+     * Get the external IDs for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-external-ids
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getExternalIds(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.externalIds), options);
+    }
+
+    /**
+     * Get the images that belong to a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-images
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getImages(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.images), options);
+    }
+
+    /**
+     * Get the keywords that have been added to a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-keywords
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getKeywords(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.keywords), options);
+    }
+
+    /**
+     * Get a list of recommended TV shows for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-recommendations
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getRecommendations(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.recommendations), options);
+    }
+
+    /**
+     * Get the user reviews for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-reviews
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getReviews(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.reviews), options);
+    }
+
+    /**
+     * Get a list of seasons or episodes that have been screened in a film festival or theatre.
+     * @see https://developers.themoviedb.org/3/tv/get-screened-theatrically
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getScreenedTheatrically(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.screenedTheartically), options);
+    }
+
+    /**
+     * Get a list of similar TV shows.
+     * @see https://developers.themoviedb.org/3/tv/get-similar-tv-shows
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getSimilar(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.similar), options);
+    }
+
+    /**
+     * Get a list of translations that have been created for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-translations
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getTranslations(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.translations), options);
+    }
+
+    /**
+     * Get the videos that have been added to a TV show.
+     * @see https://developers.themoviedb.org/3/tv/get-tv-videos
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async getVideos(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('GET', this.createPath(this.paths.videos), options);
+    }
+
+    /**
+     * Rate a TV show.
+     * @see https://developers.themoviedb.org/3/tv/rate-tv-show
+     *
+     * @param {Object} [options] Request options
+     * @param {Object} [content] Request content
+     * @returns {Promise<Object>}
+     */
+    async addRating(content = {}, options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('POST', this.createPath(this.paths.rating), options, content);
+    }
+
+    /**
+     * Remove a rating for a TV show.
+     * @see https://developers.themoviedb.org/3/tv/rate-tv-show
+     *
+     * @param {Object} [options] Request options
+     * @returns {Promise<Object>}
+     */
+    async removeRating(options = {}) {
+        if (!this.id) return Promise.reject(Error(this.message.idRequired));
+
+        return this.request('DELETE', this.createPath(this.paths.rating), options);
+    }
+}
+
+/**
+ * TV endpoint simple.
+ * @see https://developers.themoviedb.org/3/tv
+ *
+ * @prop {Object} paths Endpoint paths
+ * @extends {Util}
+ */
+export class TVEndpointSimple extends Util {
+    /**
+     * Creates an instance of TVEndpointSimple.
+     *
+     * @param {number} version API version
+     * @param {Object} defaultOptions Default request options
+     */
+    constructor(version, defaultOptions) {
+        super(version, defaultOptions);
+
+        this.paths = paths;
+    }
+
+    /**
+     * Create path for an endpoint.
+     *
+     * @param {string} value Endpoint path
+     * @returns {string}
+     */
+    createPath(value) {
+        return this.paths.base + value;
     }
 
     /**
@@ -72,215 +334,6 @@ class TVEndpoint extends Util {
     }
 
     /**
-     * Get all of the alternative titles for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-alternative-titles
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getAlternativeTitles(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.alternativeTitles), options);
-    }
-
-    /**
-     * Get the changes for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-changes
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async changes(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.changes), options);
-    }
-
-    /**
-     * Get the list of content ratings (certifications) that have been added to a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-content-ratings
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getContentRatings(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.contentRatings), options);
-    }
-
-    /**
-     * Get the credits (cast and crew) for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-credits
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getCredits(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.credits), options);
-    }
-
-    /**
-     * Get all of the episode groups that have been created for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-episode-groups
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getEpisodeGroups(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.episodeGroups), options);
-    }
-
-    /**
-     * Get the external IDs for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-external-ids
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getExternalIds(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.externalIds), options);
-    }
-
-    /**
-     * Get the images that belong to a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-images
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getImages(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.images), options);
-    }
-
-    /**
-     * Get the keywords that have been added to a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-keywords
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getKeywords(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.keywords), options);
-    }
-
-    /**
-     * Get a list of recommended TV shows for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-recommendations
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getRecommendations(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.recommendations), options);
-    }
-
-    /**
-     * Get the user reviews for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-reviews
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getReviews(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.reviews), options);
-    }
-
-    /**
-     * Get a list of seasons or episodes that have been screened in a film festival or theatre.
-     * @see https://developers.themoviedb.org/3/tv/get-screened-theatrically
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getScreenedTheatrically(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.screenedTheartically), options);
-    }
-
-    /**
-     * Get a list of similar TV shows.
-     * @see https://developers.themoviedb.org/3/tv/get-similar-tv-shows
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getSimilar(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.similar), options);
-    }
-
-    /**
-     * Get a list of translations that have been created for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-translations
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getTranslations(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.translations), options);
-    }
-
-    /**
-     * Get the videos that have been added to a TV show.
-     * @see https://developers.themoviedb.org/3/tv/get-tv-videos
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async getVideos(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('GET', this.createPath(this.paths.videos), options);
-    }
-
-    /**
-     * Rate a TV show.
-     * @see https://developers.themoviedb.org/3/tv/rate-tv-show
-     *
-     * @param {Object} [options] Request options
-     * @param {Object} [content] Request content
-     * @returns {Promise<Object>}
-     */
-    async addRating(content = {}, options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('POST', this.createPath(this.paths.rating), options, content);
-    }
-
-    /**
-     * Remove a rating for a TV show.
-     * @see https://developers.themoviedb.org/3/tv/rate-tv-show
-     *
-     * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
-     */
-    async removeRating(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
-        return this.request('DELETE', this.createPath(this.paths.rating), options);
-    }
-
-    /**
      * Get the most newly created TV show.
      * @see https://developers.themoviedb.org/3/movies/get-latest-tv
      *
@@ -288,8 +341,6 @@ class TVEndpoint extends Util {
      * @returns {Promise<Object>}
      */
     async getLatest(options = {}) {
-        if (!this.id) return Promise.reject(Error(this.error.noId));
-
         return this.request('GET', this.createPath(this.paths.latest), options);
     }
 
@@ -337,5 +388,3 @@ class TVEndpoint extends Util {
         return this.request('GET', this.createPath(this.paths.topRated), options);
     }
 }
-
-export default TVEndpoint;
