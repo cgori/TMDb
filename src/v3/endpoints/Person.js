@@ -79,8 +79,20 @@ export class PersonEndpoint extends Util {
     async getDetails(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
+        const values = ['GET', this.createPath(this.paths.details), options];
+        const append = options.append_to_response.split(',');
+
         try {
-            this.details = await this.request('GET', this.createPath(this.paths.details), options);
+            const response = await this.request(...values);
+
+            for (let i = 0; i < append.length; i += 1) {
+                const endpoint = append[i];
+
+                this[endpoint] = response[endpoint];
+                delete response[endpoint];
+            }
+
+            this.details = response;
         } catch (error) {
             return Promise.reject(error);
         }
