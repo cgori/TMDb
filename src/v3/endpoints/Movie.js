@@ -74,12 +74,18 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-details
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getDetails(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.details), options);
+        try {
+            this.details = await this.request('GET', this.createPath(this.paths.details), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -87,12 +93,20 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-alternative-titles
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getAlternativeTitles(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.alternativeTitles), options);
+        const values = ['GET', this.createPath(this.paths.alternativeTitles), options];
+
+        try {
+            this.alternativeTitles = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -100,12 +114,18 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-changes
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getChanges(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.changes), options);
+        try {
+            this.changes = await this.request('GET', this.createPath(this.paths.changes), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -113,12 +133,18 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-credits
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getCredits(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.credits), options);
+        try {
+            this.credits = await this.request('GET', this.createPath(this.paths.credits), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -126,12 +152,20 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-external-ids
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getExternalIds(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.externalIds), options);
+        const values = ['GET', this.createPath(this.paths.externalIds), options];
+
+        try {
+            this.externalIds = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -139,12 +173,18 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-images
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getImages(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.images), options);
+        try {
+            this.images = await this.request('GET', this.createPath(this.paths.images), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -152,12 +192,20 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-keywords
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getKeywords(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.keywords), options);
+        const values = ['GET', this.createPath(this.paths.keywords), options];
+
+        try {
+            this.keywords = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -165,12 +213,20 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-release-dates
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getReleaseDates(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.releaseDates), options);
+        const values = ['GET', this.createPath(this.paths.releaseDates), options];
+
+        try {
+            this.releaseDates = await this.request(...values);
+        } catch (error) {
+            Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -178,12 +234,18 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-videos
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getVideos(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.videos), options);
+        try {
+            this.videos = await this.request('GET', this.createPath(this.paths.videos), options);
+        } catch (error) {
+            Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -191,12 +253,20 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-translations
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getTranslations(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.translations), options);
+        const values = ['GET', this.createPath(this.paths.translations), options];
+
+        try {
+            this.translations = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -204,12 +274,20 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-recommendations
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getRecommendations(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.recommendations), options);
+        const values = ['GET', this.createPath(this.paths.recommendations), options];
+
+        try {
+            this.recommendations = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -217,12 +295,18 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-similar-movies
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getSimilar(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.similar), options);
+        try {
+            this.similar = await this.request('GET', this.createPath(this.paths.similar), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -230,12 +314,18 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-reviews
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getReviews(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.reviews), options);
+        try {
+            this.reviews = await this.request('GET', this.createPath(this.paths.reviews), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -243,12 +333,18 @@ export class MovieEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/movies/get-movie-lists
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<MovieEndpoint>}
      */
     async getLists(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.lists), options);
+        try {
+            this.lists = await this.request('GET', this.createPath(this.paths.lists), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**

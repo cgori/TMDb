@@ -74,12 +74,18 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-person-details
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<PersonEndpoint>}
      */
     async getDetails(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.details), options);
+        try {
+            this.details = await this.request('GET', this.createPath(this.paths.details), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -87,12 +93,18 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-person-changes
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<PersonEndpoint>}
      */
     async getChanges(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.changes), options);
+        try {
+            this.changes = await this.request('GET', this.createPath(this.paths.changes), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -100,12 +112,20 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-person-movie-credits
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<PersonEndpoint>}
      */
     async getMovieCredits(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.movieCredits), options);
+        const values = ['GET', this.createPath(this.paths.movieCredits), options];
+
+        try {
+            this.movieCredits = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -113,12 +133,20 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-person-tv-credits
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<{PersonEndpoint}>}
      */
     async getTVCredits(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.tvCredits), options);
+        const values = ['GET', this.createPath(this.paths.tvCredits), options];
+
+        try {
+            this.tvCredits = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -126,12 +154,20 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-person-combined-credits
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<PersonEndpoint>}
      */
     async getCombinedCredits(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.combinedCredits), options);
+        const values = ['GET', this.createPath(this.paths.combinedCredits), options];
+
+        try {
+            this.combinedCredits = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -139,12 +175,20 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-person-external-ids
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<PersonEndpoint>}
      */
     async getExternalIds(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.externalIds), options);
+        const values = ['GET', this.createPath(this.paths.externalIds), options];
+
+        try {
+            this.externalIds = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -152,12 +196,18 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-person-images
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<PersonEndpoint>}
      */
     async getImages(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.images), options);
+        try {
+            this.images = await this.request('GET', this.createPath(this.paths.images), options);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -165,12 +215,20 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-tagged-images
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<PersonEndpoint>}
      */
     async getTaggedImages(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.taggedImages), options);
+        const values = ['GET', this.createPath(this.paths.taggedImages), options];
+
+        try {
+            this.taggedImages = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 
     /**
@@ -178,12 +236,20 @@ export class PersonEndpoint extends Util {
      * @see https://developers.themoviedb.org/3/people/get-person-translations
      *
      * @param {Object} [options] Request options
-     * @returns {Promise<Object>}
+     * @returns {Promise<PersonEndpoint>}
      */
     async getTranslations(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        return this.request('GET', this.createPath(this.paths.translations), options);
+        const values = ['GET', this.createPath(this.paths.translations), options];
+
+        try {
+            this.translations = await this.request(...values);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+
+        return this;
     }
 }
 
