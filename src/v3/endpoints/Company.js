@@ -5,6 +5,14 @@ import SearchEndpoint from './Search';
 
 import paths from '../paths/Company';
 
+/**
+ * Company endpoint.
+ * @see https://developers.themoviedb.org/3/companies
+ *
+ * @prop {number} id TMDb ID
+ * @prop {Object} paths Endpoint paths
+ * @extends {Util}
+ */
 class CompanyEndpoint extends Util {
     /**
      * Creates an instance of CompanyEndpoint.
@@ -71,20 +79,8 @@ class CompanyEndpoint extends Util {
     async getDetails(options = {}) {
         if (!this.id) return Promise.reject(Error(this.message.idRequired));
 
-        const values = ['GET', this.createPath(this.paths.details), options];
-        const append = options.append_to_response.split(',');
-
         try {
-            const response = await this.request(...values);
-
-            for (let i = 0; i < append.length; i += 1) {
-                const endpoint = append[i];
-
-                this[endpoint] = response[endpoint];
-                delete response[endpoint];
-            }
-
-            this.details = response;
+            this.details = await this.request('GET', this.createPath(this.paths.details), options);
         } catch (error) {
             return Promise.reject(error);
         }
@@ -132,4 +128,5 @@ class CompanyEndpoint extends Util {
         return this;
     }
 }
+
 export default CompanyEndpoint;
